@@ -14,8 +14,7 @@
   "functions": {
     "api/**/*.js": {
       "maxDuration": 30,
-      "memory": 1024,
-      "runtime": "nodejs24.x"
+      "memory": 1024
     }
   }
 }
