@@ -1,11 +1,9 @@
 const https = require('https');
 
-const API_KEY = process.env.GROQ_API_KEY;
 const MODEL = 'llama-3.3-70b-versatile';
-const BASE_URL = 'https://api.groq.com';
 
 // Helper: Make API call to Groq
-function makeApiCall(messages) {
+function makeApiCall(messages, apiKey) {
   return new Promise((resolve, reject) => {
     const postData = JSON.stringify({
       model: MODEL,
@@ -20,7 +18,7 @@ function makeApiCall(messages) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${API_KEY}`,
+        'Authorization': `Bearer ${apiKey}`,
         'Content-Length': Buffer.byteLength(postData)
       }
     };
@@ -57,6 +55,9 @@ function makeApiCall(messages) {
 
 // Export handler for Vercel
 module.exports = async (req, res) => {
+  // ✅ Read API_KEY inside handler (at request time, not module load time)
+  const API_KEY = process.env.GROQ_API_KEY;
+  
   // CORS Headers - Allow any origin (Vercel handles domain routing)
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -87,21 +88,21 @@ module.exports = async (req, res) => {
 
     // Check if GROQ_API_KEY exists
     if (!API_KEY) {
-      console.error('❌ GROQ_API_KEY not set');
+      console.error('❌ GROQ_API_KEY not set in environment variables');
       return res.status(500).json({ 
         error: 'Server configuration error: GROQ_API_KEY not set',
         details: 'Please set GROQ_API_KEY in Vercel Environment Variables'
       });
     }
 
-    console.log('✅ Chat request');
+    console.log('✅ Chat request received');
     console.log('📝 Message:', message.substring(0, 50) + '...');
-    console.log('🔑 API Key exists:', !!API_KEY);
+    console.log('🔑 API Key set:', !!API_KEY);
 
-    // Call Groq API
+    // Call Groq API with the API_KEY
     const aiMessage = await makeApiCall([
       { role: 'user', content: message }
-    ]);
+    ], API_KEY);
 
     return res.status(200).json({ 
       success: true,
