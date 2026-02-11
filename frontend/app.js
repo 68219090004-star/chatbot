@@ -4,12 +4,11 @@
 // ═══════════════════════════════════════════════════════════════
 
 // ─── Configuration ──────────────────────────────────────────────
-// ใช้ API endpoint จาก environment หรือ localhost สำหรับ development
-const API_BASE = window.location.hostname === 'localhost' 
-  ? 'http://localhost:3001/api'
-  : `${window.location.protocol}//${window.location.host}/api`;
+// Direct API endpoint - works on both dev and production
+const API_BASE = '/api';  // Works everywhere via relative path
 
 console.log('🔗 API_BASE:', API_BASE);
+console.log('📍 Current URL:', window.location.href);
 
 // ─── DOM Elements ────────────────────────────────────────────────
 const elements = {
