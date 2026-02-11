@@ -1,0 +1,24 @@
+{
+  "buildCommand": "npm install",
+  "outputDirectory": "frontend",
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/$1"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ],
+  "env": {
+    "GROQ_API_KEY": "@GROQ_API_KEY",
+    "CORS_ORIGIN": "@CORS_ORIGIN"
+  },
+  "functions": {
+    "api/**/*.js": {
+      "maxDuration": 30,
+      "memory": 1024
+    }
+  }
+}
