@@ -57,7 +57,7 @@ function makeApiCall(messages) {
 
 // Export handler for Vercel
 module.exports = async (req, res) => {
-  // CORS Headers
+  // CORS Headers - Allow any origin (Vercel handles domain routing)
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
@@ -91,6 +91,9 @@ module.exports = async (req, res) => {
         error: 'Server configuration error: GROQ_API_KEY not set'
       });
     }
+
+    console.log('✅ Chat request from:', req.headers.origin);
+    console.log('📝 Message:', message.substring(0, 50) + '...');
 
     // Call Groq API
     const aiMessage = await makeApiCall([
