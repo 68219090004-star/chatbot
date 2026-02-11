@@ -31,3 +31,4 @@ data/*.json
 backend/.env
 node_modules
 
+.vercel

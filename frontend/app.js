@@ -9,6 +9,8 @@ const API_BASE = window.location.hostname === 'localhost'
   ? 'http://localhost:3001/api'
   : `${window.location.protocol}//${window.location.host}/api`;
 
+console.log('🔗 API_BASE:', API_BASE);
+
 // ─── DOM Elements ────────────────────────────────────────────────
 const elements = {
   sidebar: document.getElementById('sidebar'),
