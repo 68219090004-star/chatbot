@@ -65,6 +65,7 @@ module.exports = async (req, res) => {
     'Access-Control-Allow-Headers',
     'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
   );
+  res.setHeader('Content-Type', 'application/json');
 
   // Handle preflight
   if (req.method === 'OPTIONS') {
@@ -88,12 +89,14 @@ module.exports = async (req, res) => {
     if (!API_KEY) {
       console.error('❌ GROQ_API_KEY not set');
       return res.status(500).json({ 
-        error: 'Server configuration error: GROQ_API_KEY not set'
+        error: 'Server configuration error: GROQ_API_KEY not set',
+        details: 'Please set GROQ_API_KEY in Vercel Environment Variables'
       });
     }
 
-    console.log('✅ Chat request from:', req.headers.origin);
+    console.log('✅ Chat request');
     console.log('📝 Message:', message.substring(0, 50) + '...');
+    console.log('🔑 API Key exists:', !!API_KEY);
 
     // Call Groq API
     const aiMessage = await makeApiCall([
@@ -101,6 +104,7 @@ module.exports = async (req, res) => {
     ]);
 
     return res.status(200).json({ 
+      success: true,
       data: {
         message: aiMessage
       }
@@ -108,9 +112,11 @@ module.exports = async (req, res) => {
     
   } catch (error) {
     console.error('❌ Chat API Error:', error.message);
+    console.error('Stack:', error.stack);
     return res.status(500).json({ 
       error: 'Failed to process request',
-      message: error.message 
+      message: error.message,
+      details: error.toString()
     });
   }
 };

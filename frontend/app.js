@@ -560,9 +560,17 @@ function showWelcomeScreen() {
 
 // ─── Response Handler ────────────────────────────────────────────
 async function handleResponse(res) {
-  const data = await res.json();
+  let data;
+  try {
+    data = await res.json();
+  } catch (err) {
+    console.error('❌ Invalid JSON response:', err);
+    throw new Error('Server returned invalid response: ' + res.status + ' ' + res.statusText);
+  }
+  
   if (!res.ok) {
-    throw new Error(data.error?.message || 'เกิดข้อผิดพลาดที่ไม่ทราบสาเหตุ');
+    console.error('❌ API Error:', data);
+    throw new Error(data.error?.message || data.error || data.message || 'Unknown error');
   }
   return data;
 }
