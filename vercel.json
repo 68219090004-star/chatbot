@@ -17,6 +17,5 @@
       "memory": 1024,
       "runtime": "nodejs24.x"
     }
-  },
-  "env": []
+  }
 }
